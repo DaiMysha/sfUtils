@@ -38,6 +38,9 @@ namespace sfml {
 
     template <typename T>
     T norm2(const sf::Vector2<T>& v);
+	
+    template <typename T>
+    T norm(const sf::Vector2<T>& v);
 
     template <typename T>
     float getAngleBetweenVectors(const sf::Vector2<T>& o, const sf::Vector2<T>& v);
@@ -80,6 +83,14 @@ namespace sfml {
         return sf::IntRect(sf::Vector2i(xmin,ymin),sf::Vector2i(xmax-xmin,ymax-ymin));
     }
 
+	///tests if p2 is left of the line p0 -> p1
+	///returns >0 if left, 0 if on the line, <0 if right
+	template <typename T>
+	T isLeft(const sf::Vector2<T>& p0, const sf::Vector2<T>& p1, const sf::Vector2<T>& p2);
+	
+	///returns true if the point p is inside the shape s
+	template <typename T>
+	bool contains(const sf::ConvexShape& s, sf::Vector2<T> p);
 }
 }
 }
