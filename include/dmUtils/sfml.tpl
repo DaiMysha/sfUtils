@@ -1,4 +1,4 @@
-/** 
+/**
 BSD 2-Clause License
 
 Copyright (c) 2017, Christophe Gire
@@ -32,26 +32,26 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace dm {
 namespace utils {
-namespace sf {
+namespace sfml {
 
     template <typename T>
-    T norm2(const sf::Vector2<T>& v) 
+    T norm2(const sf::Vector2<T>& v)
 	{
         return (v.x*v.x + v.y*v.y);
     }
 
     template <typename T>
-    T norm(const sf::Vector2<T>& v) 
+    T norm(const sf::Vector2<T>& v)
 	{
         return sqrt(norm2(v));
     }
 
     template <typename T>
-    float getAngleBetweenVectors(const sf::Vector2<T>& o, const sf::Vector2<T>& v) 
+    float getAngleBetweenVectors(const sf::Vector2<T>& o, const sf::Vector2<T>& v)
 	{
         return -(atan2(static_cast<double>(o.y),static_cast<double>(o.x)) - atan2(static_cast<double>(v.y),static_cast<double>(v.x)));
     }
-	
+
 	template <typename T>
 	T dot(const sf::Vector2<T>& a, const sf::Vector2<T>& b)
 	{
@@ -61,7 +61,7 @@ namespace sf {
     ///If you don't know the angle of your base vector use the function with 2 parameters
     ///if you do know this angle pass it to this function, it saves time
     template <typename T>
-    sf::Vector2<T> rotate(const sf::Vector2<T>& v, float alpha, float vecRot) 
+    sf::Vector2<T> rotate(const sf::Vector2<T>& v, float alpha, float vecRot)
 	{
         float totAngle = alpha + vecRot;
         float n = sqrt(static_cast<float>(norm2<T>(v)));
@@ -69,13 +69,13 @@ namespace sf {
     }
 
     template <typename T>
-    sf::Vector2<T> rotate(const sf::Vector2<T>& v, float alpha) 
+    sf::Vector2<T> rotate(const sf::Vector2<T>& v, float alpha)
 	{
         return rotate(v,alpha,getAngleBetweenVectors(sf::Vector2f(0.0f,1.0f),v));
     }
 
 	template <typename T>
-	sf::Vector2<T> rotate(const sf::Vector2<T>& v, float alpha, const sf::Vector2<T>& o) 
+	sf::Vector2<T> rotate(const sf::Vector2<T>& v, float alpha, const sf::Vector2<T>& o)
 	{
 		return rotate(v-o,alpha)+o;
 	}
@@ -99,7 +99,7 @@ namespace sf {
 		{
 			shape.setPoint(i, t.transformPoint(shapeParam.getPoint(i)));
 		}
-		
+
 		size_t minyi = 0, maxyi = 0;
 		T miny = shape.getPoint(0).y;
 		T maxy = miny;
@@ -202,7 +202,7 @@ namespace sf {
 			(isLeft(shape.getPoint(rightSide1), shape.getPoint(rightSide2), point) <= 0
 			&& isLeft(shape.getPoint(leftSide1), shape.getPoint(leftSide2), point) >= 0);
 	}
-	
+
 }
 }
 }
