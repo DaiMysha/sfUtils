@@ -47,6 +47,16 @@ namespace sfml {
     }
 
     template <typename T>
+    sf::Vector2<T> normalize(sf::Vector2<T> v)
+    {
+        double n = norm(v);
+        v.x /= n;
+        v.y /= n;
+
+        return v;
+    }
+
+    template <typename T>
     float getAngleBetweenVectors(const sf::Vector2<T>& o, const sf::Vector2<T>& v)
 	{
         return -(atan2(static_cast<double>(o.y),static_cast<double>(o.x)) - atan2(static_cast<double>(v.y),static_cast<double>(v.x)));

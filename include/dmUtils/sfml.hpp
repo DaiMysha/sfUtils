@@ -43,6 +43,9 @@ namespace sfml {
     T norm(const sf::Vector2<T>& v);
 
     template <typename T>
+    sf::Vector2<T> normalize(sf::Vector2<T> v);
+
+    template <typename T>
     float getAngleBetweenVectors(const sf::Vector2<T>& o, const sf::Vector2<T>& v);
 
     template <typename T>
