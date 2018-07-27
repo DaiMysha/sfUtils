@@ -94,6 +94,13 @@ namespace sfml {
 	///returns true if the point p is inside the shape s
 	template <typename T>
 	bool contains(const sf::ConvexShape& s, sf::Vector2<T> p);
+
+    ///checks for interections between line C with direction vector u and segment [a;b]
+    ///needs to have a length of 1
+	///returns the distance from the origin of the line to the segment if intersection happens and stores the point in result
+	///returns 0 if no intersection
+	template <typename T>
+	T intersect(const sf::Vector2<T>& c, const sf::Vector2<T>& u, const sf::Vector2<T>& a, const sf::Vector2<T>& b, sf::Vector2<T>& result);
 }
 }
 }

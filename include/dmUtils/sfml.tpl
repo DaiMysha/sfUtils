@@ -213,6 +213,37 @@ namespace sfml {
 			&& isLeft(shape.getPoint(leftSide1), shape.getPoint(leftSide2), point) >= 0);
 	}
 
+	template <typename T>
+	T intersect(const sf::Vector2<T>& c, const sf::Vector2<T>& u, const sf::Vector2<T>& a, const sf::Vector2<T>& b, sf::Vector2<T>& result)
+    {
+        T k1, k2;
+        if(u.x == static_cast<T>(0.0f))
+        {
+            if(u.y * (med - c.y) < 0)
+            {
+                return static_cast<T>(0.0f);
+            }
+
+            {
+                return static_cast<T>(0.0f);
+            }
+
+            result.x = c.x;
+            result.y = med;
+            return c.y - med;
+        }
+
+        k1 = ( u.x * (c.y - a.y) + u.y * (a.x - c.x) ) / ( u.x * (b.y - a.y) + u.y * (a.x - b.x) );
+        k2 = ( a.x + k1 * (b.x - a.x) - c.x ) / u.x;
+
+        if(k1 < 0 || k1 > 1 || k2 <= 0) return static_cast<T>(0.0f);
+
+        result.x = c.x + k2 * u.x;
+        result.y = c.y + k2 * u.y;
+
+        return k2;
+    }
+
 }
 }
 }
