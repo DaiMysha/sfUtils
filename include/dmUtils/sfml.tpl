@@ -219,11 +219,13 @@ namespace sfml {
         T k1, k2;
         if(u.x == static_cast<T>(0.0f))
         {
+            T med = dm::utils::maths::abs(b.y + a.y) / static_cast<T>(0.0f);
             if(u.y * (med - c.y) < 0)
             {
                 return static_cast<T>(0.0f);
             }
 
+            if(c.x < dm::utils::maths::min(a.x,b.x) || c.x > dm::utils::maths::max(a.x,b.x))
             {
                 return static_cast<T>(0.0f);
             }
