@@ -219,7 +219,8 @@ namespace sfml {
         T k1, k2;
         if(u.x == static_cast<T>(0.0f))
         {
-            T med = dm::utils::maths::abs(b.y + a.y) / static_cast<T>(0.0f);
+            T med = dm::utils::maths::abs(b.y + a.y) / static_cast<T>(2.0f);
+
             if(u.y * (med - c.y) < 0)
             {
                 return static_cast<T>(0.0f);
@@ -232,7 +233,7 @@ namespace sfml {
 
             result.x = c.x;
             result.y = med;
-            return c.y - med;
+            return med - c.y;
         }
 
         k1 = ( u.x * (c.y - a.y) + u.y * (a.x - c.x) ) / ( u.x * (b.y - a.y) + u.y * (a.x - b.x) );
