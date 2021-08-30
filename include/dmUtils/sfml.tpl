@@ -81,7 +81,7 @@ namespace sfml {
     template <typename T>
     sf::Vector2<T> rotate(const sf::Vector2<T>& v, float alpha)
 	{
-        return rotate(v,alpha,getAngleBetweenVectors(sf::Vector2f(0.0f,1.0f),v));
+        return rotate(v,alpha,getAngleBetweenVectors(sf::Vector2<T>(0.0f,1.0f),v));
     }
 
 	template <typename T>
@@ -247,6 +247,96 @@ namespace sfml {
         return k2;
     }
 
+    template<typename T>
+    sf::Vector2<T> project(const sf::Vector2<T>& point, const sf::Vector2<T>& l1, const sf::Vector2<T>& l2)
+    {
+        T a1 = l2.y - l1.y;
+        T b1 = l1.x - l2.x;
+        T c1 = (l2.y - l1.y) * l1.x + (l1.x - l2.x) * l1.y;
+        T c2 = -1 * b1 * point.x + a1 * point.y;
+        T det = a1*a1 - b1*b1*-1;
+        if(det == 0) return point;
+
+        return sf::Vector2<T>((a1*c1 - b1*c2) / det, (a1*c2 - b1*c1*-1) / det);
+    }
+
+    template <typename T>
+    void genericIntersection(const sf::Vector2<T>& p0, sf::Vector2<T> s1, const sf::Vector2<T>& p2, sf::Vector2<T> s2, float& d0, float& d2, sf::Vector2<T>* r)
+    {
+        if(dm::utils::sfml::norm2(s1) != 1)
+        {
+            s1 = dm::utils::sfml::normalize(s1);
+        }
+        if(dm::utils::sfml::norm2(s2) != 1)
+        {
+            s2 = dm::utils::sfml::normalize(s2);
+        }
+
+        d2 = (-s1.y * (p0.x - p2.x) + s1.x * (p0.y - p2.y)) / (-s2.x * s1.y + s1.x * s2.y);
+        d0 = ( s2.x * (p0.y - p2.y) - s2.y * (p0.x - p2.x)) / (-s2.x * s1.y + s1.x * s2.y);
+
+        if (r)
+        {
+            r->x = p0.x + (d0 * s1.x);
+            r->y = p0.y + (d0 * s1.y);
+        }
+    }
+
+    template <typename T>
+    T halfLineToLineIntersection(const sf::Vector2<T>& p0, sf::Vector2<T> s1, const sf::Vector2<T>& p2, sf::Vector2<T> s2, sf::Vector2<T>* r)
+    {
+        T d0, d2;
+        genericIntersection(p0, s1, p2, s2, d0, d2, r);
+
+        if (d0 >= 0)
+        {
+            return d0;
+        }
+
+        return 0; // No collision
+    }
+
+    template<typename T>
+    T halfLineToHalfLineIntersection(const sf::Vector2<T>& p0, sf::Vector2<T> s1, const sf::Vector2<T>& p2, sf::Vector2<T> s2, sf::Vector2<T>* r)
+    {
+        T d0, d2;
+        genericIntersection(p0, s1, p2, s2, d0, d2, r);
+
+        if (d0 >= 0 /*&& s <= 1*/ && d2 >= 0/* && t <= 1*/)
+        {
+            return d0;
+        }
+
+        return 0; // No collision
+    }
+
+    template <typename T>
+    T halfLineToSegmentIntersection(const sf::Vector2<T>& p0, sf::Vector2<T> s1, const sf::Vector2<T>& a, const sf::Vector2<T>& b, sf::Vector2<T>* r)
+    {
+        T d0, d2;
+        genericIntersection(p0, s1, a, normalize(b - a), d0, d2, r);
+
+        if (d0 >= 0 /*&& s <= 1*/ && d2 >= 0 && d2 <= 1)
+        {
+            return d0;
+        }
+
+        return 0; // No collision
+    }
+
+    template <typename T>
+    T segmentToSegmentIntersection(const sf::Vector2<T>& a1, sf::Vector2<T> b1, const sf::Vector2<T>& a2, const sf::Vector2<T>& b2, sf::Vector2<T>* r)
+    {
+        T d0, d2;
+        genericIntersection(a1, normalize(b1 - a1), a2, normalize(b2 - a2), d0, d2, r);
+
+        if (d0 >= 0 && d0 <= 1 && d2 >= 0 && d2 <= 1)
+        {
+            return d0;
+        }
+
+        return 0; // No collision
+    }
 }
 }
 }

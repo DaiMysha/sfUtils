@@ -64,28 +64,6 @@ namespace sfml {
     template <typename T>
     sf::Vector2<T> rotate(const sf::Vector2<T>& v, float alpha, const sf::Vector2<T>& o);
 
-    ///Returns an AABB englobbing all the pixels visible in the selected view on the world coordinates
-	inline sf::IntRect getViewInWorldAABB(const sf::View& view)
-	{
-        sf::Vector2f p[4];
-        sf::Vector2f c = view.getCenter();
-        sf::Vector2f s2 = view.getSize()/2.0f;
-        float alpha = view.getRotation();
-        p[0] = c - s2;
-        p[1] = c + sf::Vector2f(s2.x,-s2.y);
-        p[2] = c + s2;
-        p[3] = c + sf::Vector2f(-s2.x,s2.y);
-
-        for(int i=0;i<4;++i) p[i] = dm::utils::sfml::rotate(p[i],dm::utils::maths::degToRad(-alpha),c);
-
-        float xmin = dm::utils::maths::min(p[0].x,p[1].x,p[2].x,p[3].x);
-        float xmax = dm::utils::maths::max(p[0].x,p[1].x,p[2].x,p[3].x);
-        float ymin = dm::utils::maths::min(p[0].y,p[1].y,p[2].y,p[3].y);
-        float ymax = dm::utils::maths::max(p[0].y,p[1].y,p[2].y,p[3].y);
-
-        return sf::IntRect(sf::Vector2i(xmin,ymin),sf::Vector2i(xmax-xmin,ymax-ymin));
-    }
-
 	///tests if p2 is left of the line p0 -> p1
 	///returns >0 if left, 0 if on the line, <0 if right
 	template <typename T>
@@ -95,12 +73,43 @@ namespace sfml {
 	template <typename T>
 	bool contains(const sf::ConvexShape& s, sf::Vector2<T> p);
 
-    ///checks for interections between line C with direction vector u and segment [a;b]
-    ///needs to have a length of 1
-	///returns the distance from the origin of the line to the segment if intersection happens and stores the point in result
-	///returns 0 if no intersection
-	template <typename T>
-	T intersect(const sf::Vector2<T>& c, const sf::Vector2<T>& u, const sf::Vector2<T>& a, const sf::Vector2<T>& b, sf::Vector2<T>& result);
+	///Projects the point point onto the line passing through L1 and L2
+    template <typename T>
+    sf::Vector2<T> project(const sf::Vector2<T>& point, const sf::Vector2<T>& l1, const sf::Vector2<T>& l2);
+
+    ///Checks for the intersection between the line
+    ///passing through P0 of direction S1
+    ///and the line
+    ///passing through P2 of direction S2
+    ///R is the point of intersection if there is one
+    ///D0 is the distance between R and P0
+    ///D2 is the distance between R and P2
+    template <typename T>
+    void genericIntersection(const sf::Vector2<T>& p0, sf::Vector2<T> s1, const sf::Vector2<T>& p2, sf::Vector2<T> s2, float& d0, float& d2, sf::Vector2<T>* r = nullptr);
+
+    ///Calculate the intersection between
+    ///the half line starting at p0 of directon S1
+    ///And the line passing through p2 of direction s2
+    template <typename T>
+    T halfLineToLineIntersection(const sf::Vector2<T>& p0, sf::Vector2<T> s1, const sf::Vector2<T>& p2, sf::Vector2<T> s2, sf::Vector2<T>* r = nullptr);
+
+    ///Calculate the intersection between
+    ///the half line start at p0 of directon S1
+    ///And the half line startint at p2 of direction s2
+    template <typename T>
+    T halfLineToHalfLineIntersection(const sf::Vector2<T>& p0, sf::Vector2<T> s1, const sf::Vector2<T>& p2, sf::Vector2<T> s2, sf::Vector2<T>* r = nullptr);
+
+    ///Calculate the intersection between
+    ///the half line start at p0 of directon S1
+    ///and the segment [a;b]
+    template <typename T>
+    T halfLineToSegmentIntersection(const sf::Vector2<T>& p0, sf::Vector2<T> s1, const sf::Vector2<T>& a, const sf::Vector2<T>& b, sf::Vector2<T>* r = nullptr);
+
+    ///Calculate the intersection between
+    ///the segment [a1;b1]
+    ///and the segment [a2;b2]
+    template <typename T>
+    T segmentToSegmentIntersection(const sf::Vector2<T>& a1, sf::Vector2<T> b1, const sf::Vector2<T>& a2, const sf::Vector2<T>& b2, sf::Vector2<T>* r = nullptr);
 }
 }
 }
